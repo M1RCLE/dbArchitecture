@@ -1,0 +1,6 @@
+analyzer/logs/*
+analyzer/app
+
+data
+
+backuper/backups/

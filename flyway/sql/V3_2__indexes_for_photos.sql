@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_photo_photo_id_list ON photo(photoid);

@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_location_location_id ON location(locationid);

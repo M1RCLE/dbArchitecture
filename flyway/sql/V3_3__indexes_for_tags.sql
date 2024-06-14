@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_tag_photo_id_user_id ON tag(photoid, userid);

@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  flyway:
+    image: flyway/flyway:latest
+    command: ["migrate", "-connectRetries=60"]
+    volumes:
+      - ./flyway/sql:/flyway/sql
+      - ./flyway/conf:/flyway/conf/
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - BACKUPS_TIMEOUT=${BACKUPS_TIMEOUT}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./roles:/docker-entrypoint-initdb.d/
+      - ./backuper:/root/backuper/
+
+  analyzer:
+    restart: no
+    build:
+      context: ./analyzer
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SSL_MODE=${SSL_MODE}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - ANALYZER_COUNT=${ANALYZER_COUNT}
+      - AMOUNT_OF_DATA=${AMOUNT_OF_DATA}
+    volumes:
+      - ./analyzer/logs:/root/logs
+    depends_on:
+      - flyway
+    env_file:
+      - .env
