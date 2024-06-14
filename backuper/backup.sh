@@ -6,9 +6,6 @@ backup_file="$PWD/backuper/backups/$(date +'%Y%m%d%H%M%S').sql"
 
 echo "$backup_file"
 
-DB_HOST=localhost
-POSTGRES_USER=postgres
-POSTGRES_DB=postgres
 BACKUPS_COUNT=3
 
 export PGPASSWORD='postgres'
